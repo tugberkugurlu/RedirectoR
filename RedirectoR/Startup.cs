@@ -12,21 +12,37 @@ namespace RedirectoR {
 
     public partial class Startup {
 
-        public void Configuration(IAppBuilder app)  {
+        IDictionary<string, string> RedirectUrlLinks = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) 
+        { 
+            { "", "http://www.tugberkugurlu.com/" },
+            { "twitter", "http://twitter.com/tourismgeek" },
+            { "linkedin", "http://www.linkedin.com/in/tugberk" },
+            { "web-api", "http://www.tugberkugurlu.com/archive/getting-started-with-asp-net-web-api-tutorials-videos-samples" }
+        };
 
+        public void Configuration(IAppBuilder app) 
+        {
             app.Use(new Func<AppFunc, AppFunc>(ignoreNextApp => (AppFunc)Invoke));
         }
 
         public Task Invoke(IDictionary<string, object> environment) 
         {
-            byte[] responseBytes = ASCIIEncoding.UTF8.GetBytes(
-                string.Format("Serviced request on {0} at {1}", DateTime.Now.ToLongDateString(), DateTime.Now.ToLongTimeString()));
-
-            Stream responseStream = (Stream)environment["owin.ResponseBody"];
             IDictionary<string, string[]> responseHeaders = (IDictionary<string, string[]>)environment["owin.ResponseHeaders"];
-            responseHeaders["Content-Length"] = new[] { responseBytes.Length.ToString(CultureInfo.InvariantCulture) };
-            responseHeaders["Content-Type"] = new[] { "text/plain" };
-            return responseStream.WriteAsync(responseBytes, 0, responseBytes.Length);
+            responseHeaders["Content-Length"] = new[] { "0" };
+
+            string redirectUrl;
+            string path = environment["owin.RequestPath"] as string;
+            if (RedirectUrlLinks.TryGetValue(path.TrimStart('/'), out redirectUrl)) {
+
+                responseHeaders["Location"] = new[] { redirectUrl };
+                environment["owin.ResponseStatusCode"] = 301;
+            }
+            else {
+
+                environment["owin.ResponseStatusCode"] = 404;
+            }
+
+            return Task.FromResult(0);
         }
     }
 }

@@ -28,6 +28,7 @@ namespace RedirectoR {
         public void Configuration(IAppBuilder app) 
         {
             app.Use(new Func<AppFunc, AppFunc>(ignoreNextApp => (AppFunc)Invoke));
+            RegisterAddresses(app);
         }
 
         public Task Invoke(IDictionary<string, object> environment) 
@@ -48,6 +49,37 @@ namespace RedirectoR {
             }
 
             return Task.FromResult(0);
+        }
+
+        private void RegisterAddresses(IAppBuilder app) {
+
+            Uri MainHostUri = new Uri("http://tugberk.me/");
+            Uri MainWwwHostUri = new Uri("http://www.tugberk.me/");
+            Uri LocalHostUri = new Uri("http://localhost:18897/");
+
+            // NOTE: OwinServerFactoryAttribute.Create method and 
+            //       OwinHttpListener.Start should give you a hint on how
+            //       to register the addresses.
+            app.Properties["host.Addresses"] = new List<IDictionary<string, object>> {
+
+                new Dictionary<string, object> { 
+                    { "scheme", MainHostUri.Scheme },
+                    { "host", MainHostUri.Host },
+                    { "port", MainHostUri.Port.ToString()  }
+                },
+
+                new Dictionary<string, object> { 
+                    { "scheme", MainWwwHostUri.Scheme },
+                    { "host", MainWwwHostUri.Host },
+                    { "port", MainWwwHostUri.Port.ToString()  }
+                },
+
+                new Dictionary<string, object> { 
+                    { "scheme", LocalHostUri.Scheme },
+                    { "host", LocalHostUri.Host },
+                    { "port", LocalHostUri.Port.ToString() }
+                }
+            };
         }
     }
 }

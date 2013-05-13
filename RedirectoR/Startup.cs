@@ -15,9 +15,14 @@ namespace RedirectoR {
         IDictionary<string, string> RedirectUrlLinks = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) 
         { 
             { "", "http://www.tugberkugurlu.com/" },
+            { "tgbrk", "http://www.tugberkugurlu.com" },
             { "twitter", "http://twitter.com/tourismgeek" },
             { "linkedin", "http://www.linkedin.com/in/tugberk" },
-            { "web-api", "http://www.tugberkugurlu.com/archive/getting-started-with-asp-net-web-api-tutorials-videos-samples" }
+            { "web-api", "http://www.tugberkugurlu.com/archive/getting-started-with-asp-net-web-api-tutorials-videos-samples" },
+            { "webapi", "http://www.tugberkugurlu.com/archive/getting-started-with-asp-net-web-api-tutorials-videos-samples" },
+            { "mugla1203", "http://www.tugberkugurlu.com/archive/slides-of-my-ms-web-platform-and-asp-net-mvc-101-talks" },
+            { "ApiKeyAuth", "http://www.tugberkugurlu.com/archive/api-key-authorization-through-query-string-in-asp-net-web-api-authorizationfilterattribute" },
+            { "mvc4async", "http://www.tugberkugurlu.com/archive/my-take-on-task-base-asynchronous-programming-in-c-sharp-5-0-and-asp-net-mvc-web-applications" }
         };
 
         public void Configuration(IAppBuilder app) 
